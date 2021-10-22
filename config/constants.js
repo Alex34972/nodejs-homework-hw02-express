@@ -11,4 +11,6 @@ const StatusCode = {
   SERVER_ERROR: 500,
 }
 
-module.exports = { StatusCode, ValidName }
+const Salt_Factor = 6
+
+module.exports = { StatusCode, ValidName, Salt_Factor }
