@@ -23,16 +23,16 @@ const schemaLogin = Joi.object({
     .min(6)
     .required(),
 })
-const validate = async (schema, obj, res, next) => {
+const validate = async (schema, obj, next) => {
   try {
     await schema.validateAsync(obj)
     return next()
   } catch (err) {
-    res.status(StatusCode.BAD_REQUEST).json({
-      status: 'error',
+    next({
+      status: 'Error',
       code: StatusCode.BAD_REQUEST,
       message: `Field ${err.message.replace(/"/g, '')}`,
-    })
+  });
   }
 }
 module.exports.validateCreateUser = (req, _res, next) => {
