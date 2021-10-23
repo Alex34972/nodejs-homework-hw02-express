@@ -8,12 +8,12 @@ const StatusCode = {
   CREATED: 201,
   NO_CONTENT: 204,
   BAD_REQUEST: 400,
-  UN_AUTHORIZED:401,
+  UN_AUTHORIZED: 401,
   NOT_FOUND: 404,
   CONFLICT: 409,
   SERVER_ERROR: 500,
 }
 
-const Salt_Factor = 6
+const SALT_FACTOR = 6
 
-module.exports = { StatusCode, ValidName, Salt_Factor }
+module.exports = { StatusCode, ValidName, SALT_FACTOR }
