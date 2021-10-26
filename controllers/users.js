@@ -22,7 +22,8 @@ const signup = async (req, res, next) => {
       data: {
         id: newUser.id,
         name: newUser.name,
-        email: newUser.email
+        email: newUser.email,
+        avatarURL: newUser.avatar
       }
     })
   } catch (error) {
