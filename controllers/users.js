@@ -1,6 +1,9 @@
 const jwt = require('jsonwebtoken')
+const path = require('path')
+const mkdirp = require('mkdirp')
 const Users = require('../repository/users')
 const { StatusCode } = require('../config/constants')
+const  UploadService  = require('../service/file-upload')
 require('dotenv').config()
 const SECRET_KEY = process.env.JWT_SECRET_KEY
 
@@ -67,9 +70,23 @@ const logout = async (req, res) => {
   return res.status(StatusCode.NO_CONTENT).json({})
 }
 
-const uploadAvatar =  async (req, res, next) => {
- const pic = req.file
-  return res.status(StatusCode.OK).json({pic})
+const uploadAvatar =  async (req, res) => {
+  const id = String(req.user._id)
+ const file = req.file
+ const AVATAR_USERS = process.env.AVATAR_USERS
+ const dest = path.join(AVATAR_USERS, id)
+ await mkdirp(dest)
+ const uploadService = new UploadService(dest)
+ const avatarURL = await uploadService.save(file, id)
+ await Users.updateAvatar(id, avatarURL)
+ 
+  return res.status(StatusCode.OK).json({
+    status:'success',
+    code:StatusCode.OK,
+    date:{
+      avatarURL
+    }
+  })
 }
 
 
