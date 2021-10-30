@@ -23,7 +23,7 @@ const signup = async (req, res, next) => {
         id: newUser.id,
         name: newUser.name,
         email: newUser.email,
-        avatarURL: newUser.avatar
+        avatarURL: newUser.avatarURL
       }
     })
   } catch (error) {
@@ -67,6 +67,14 @@ const logout = async (req, res) => {
   return res.status(StatusCode.NO_CONTENT).json({})
 }
 
+const uploadAvatar =  async (req, res, next) => {
+ const pic = req.file
+  return res.status(StatusCode.OK).json({pic})
+}
+
+
+
+
 const current = async (req, res, next) => {
   try {
       const { id, name, email, subscription } = req.user;
@@ -85,4 +93,4 @@ const current = async (req, res, next) => {
   };
 }
 
-module.exports = { signup, login, logout, current }
+module.exports = { signup, login, logout, uploadAvatar, current }
