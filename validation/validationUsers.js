@@ -32,7 +32,7 @@ const validate = async (schema, obj, next) => {
       status: 'Error',
       code: StatusCode.BAD_REQUEST,
       message: `Field ${err.message.replace(/"/g, '')}`,
-  });
+    })
   }
 }
 module.exports.validateCreateUser = (req, _res, next) => {
