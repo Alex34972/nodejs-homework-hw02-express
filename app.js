@@ -6,8 +6,8 @@ const boolParser = require('express-query-boolean')
 const usersRouter = require('./routes/api/users')
 const contactsRouter = require('./routes/api/contacts')
 const { StatusCode } = require('./config/constants')
-require('dotenv').config();
-const AVATAR_USERS = process.env.AVATAR_USERS;
+require('dotenv').config()
+const AVATAR_USERS = process.env.AVATAR_USERS
 
 const app = express()
 
