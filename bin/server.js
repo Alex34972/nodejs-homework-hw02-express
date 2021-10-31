@@ -8,9 +8,10 @@ const mkdirp = require('mkdirp')
 const PORT = process.env.PORT || 8000
 
 db.then(() => {
-  app.listen(PORT,async() => {
+  app.listen(PORT, async() => {
     await mkdirp(UPLOAD_DIR)
     await mkdirp(AVATAR_USERS)
+
     console.log(`Server running. Use our API on port: ${PORT}`)
   })
 }).catch((err) => {
