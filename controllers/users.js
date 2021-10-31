@@ -72,12 +72,12 @@ const logout = async (req, res) => {
 
 const uploadAvatar = async (req, res) => {
   try {
-  const id = String(req.user._id)
-  const file = req.file
-  const AVATAR_USERS = process.env.AVATAR_USERS
-  const dest = path.join(AVATAR_USERS, id)
-  await mkdirp(dest)
-  const uploadService = new UploadService(dest)
+    const id = String(req.user._id)
+    const file = req.file
+    const AVATAR_USERS = process.env.AVATAR_USERS
+    const dest = path.join(AVATAR_USERS, id)
+    await mkdirp(dest)
+    const uploadService = new UploadService(dest)
     const avatarURL = await uploadService.save(file, id)
     await Users.updateAvatar(id, avatarURL)
 
@@ -94,27 +94,25 @@ const uploadAvatar = async (req, res) => {
       code: StatusCode.UN_AUTHORIZED,
       message: 'Invalid credentials'
     })
-  }}
-
-
-
-
-  const current = async (req, res, next) => {
-    try {
-      const { id, name, email, subscription } = req.user;
-      return res.status(StatusCode.OK).json({
-        status: 'Success',
-        code: StatusCode.OK,
-        data: {
-          id,
-          name,
-          email,
-          subscription,
-        },
-      });
-    } catch (error) {
-      next(error);
-    };
   }
+}
 
-  module.exports = { signup, login, logout, uploadAvatar, current }
+const current = async (req, res, next) => {
+  try {
+    const { id, name, email, subscription } = req.user
+    return res.status(StatusCode.OK).json({
+      status: 'Success',
+      code: StatusCode.OK,
+      data: {
+        id,
+        name,
+        email,
+        subscription,
+      },
+    })
+  } catch (error) {
+    next(error)
+  };
+}
+
+module.exports = { signup, login, logout, uploadAvatar, current }
