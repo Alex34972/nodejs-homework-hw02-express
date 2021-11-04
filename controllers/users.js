@@ -4,6 +4,7 @@ const mkdirp = require('mkdirp')
 const Users = require('../repository/users')
 const { StatusCode } = require('../config/constants')
 const UploadService = require('../service/file-upload')
+const { verify } = require('crypto')
 require('dotenv').config()
 const SECRET_KEY = process.env.JWT_SECRET_KEY
 
@@ -39,7 +40,7 @@ const login = async (req, res) => {
     const user = await Users.findByEmail(email)
 
     const isValidPassword = await user.isValidPassword(password)
-    if (!user || !isValidPassword) {
+    if (!user || !isValidPassword || !user?.verify) {
       return res.status(StatusCode.UN_AUTHORIZED).json({
         status: 'Error',
         code: StatusCode.UN_AUTHORIZED,
@@ -115,4 +116,8 @@ const current = async (req, res, next) => {
   };
 }
 
-module.exports = { signup, login, logout, uploadAvatar, current }
+const verifyUser = async (req, res, next) => {}
+
+const repitForVerifyUser = async (req, res, next) => {}
+
+module.exports = { signup, login, logout, uploadAvatar, current, verifyUser, repitForVerifyUser}
