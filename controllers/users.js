@@ -4,7 +4,8 @@ const mkdirp = require('mkdirp')
 const Users = require('../repository/users')
 const { StatusCode } = require('../config/constants')
 const UploadService = require('../service/file-upload')
-const { verify } = require('crypto')
+const EmailService = require('../service/email/servis')
+const createSenderSendGrid = require('../service/email/sender')
 require('dotenv').config()
 const SECRET_KEY = process.env.JWT_SECRET_KEY
 
@@ -20,6 +21,15 @@ const signup = async (req, res, next) => {
   }
   try {
     const newUser = await Users.create(req.body)
+    
+    const emailService = new EmailService(
+      process.env.NODE_ENV,
+      new createSenderSendGrid())
+    const statusEmail = await emailService.sendVerifyEmail(
+      newUser.email,
+      newUser.name,
+      newUser.verifyTokenEmail,
+      )
     return res.status(StatusCode.CREATED).json({
       status: 'Success',
       code: StatusCode.CREATED,
@@ -27,7 +37,8 @@ const signup = async (req, res, next) => {
         id: newUser.id,
         name: newUser.name,
         email: newUser.email,
-        avatarURL: newUser.avatarURL
+        avatarURL: newUser.avatarURL,
+        successEmail: statusEmail
       }
     })
   } catch (error) {
@@ -116,8 +127,54 @@ const current = async (req, res, next) => {
   };
 }
 
-const verifyUser = async (req, res, next) => {}
+const verifyUser = async (req, res, _next) => {
+  try {
+    const user = await Users.findUserByVerifyToken(req.params.token)
+    if (user) {
+      await Users.updateTokenVerify(user._id, true, null)
+      return res.status(StatusCode.OK).json({
+        status: 'Success',
+        code: StatusCode.OK,
+        data:{
+          message:'Success'
+        }
+      })
+    }
+    return res.status(HttpCode.BAD_REQUEST).json({
+      status: 'Error',
+      code: HttpCode.BAD_REQUEST,
+      message: 'Invalid token',
+  })
+  } catch (error) {
+    return res.status(StatusCode.UN_AUTHORIZED).json({
+      status: 'Error',
+      code: StatusCode.UN_AUTHORIZED,
+      message: 'Invalid credential'
+  })
+}}
 
-const repitForVerifyUser = async (req, res, next) => {}
+const repitForVerifyUser = async (req, res, next) => {
+  const { email } = req.body
+  const user = await Users.findByEmail(email)
+  if (user) {
+      const { email, name, verifyTokenEmail } = user
+      const emailService = new EmailService(
+          process.env.NODE_ENV,
+          new createSenderSendGrid(),
+      )
+      await emailService.sendVerifyEmail(
+          email,
+          name,
+          verifyTokenEmail,
+      )
+  }
+  return res.status(StatusCode.OK).json({
+      status: 'Success',
+      code: StatusCode.OK,
+      data: {
+          message: 'Success',
+      },
+  })
+}
 
 module.exports = { signup, login, logout, uploadAvatar, current, verifyUser, repitForVerifyUser}
