@@ -5,7 +5,7 @@ class CreateSenderSendGrid {
   async send(message) {
     sgMail.setApiKey(process.env.SENDGRID_API_KEY)
     return await sgMail
-      .send({ ...message, from: 'terry_cat@meta.ua' })
+      .send({ ...message, from: 'alexhifi2203@gmail.com' })
      
   }
 }
