@@ -16,7 +16,7 @@ const updateToken = async (id, token) => {
   return await User.updateOne({ _id: id }, { token })
 }
 const updateTokenVerify = async (id, verify, verifyTokenEmail) => {
-  return await User.updateOne({ _id: id }, { verify, verifyTokenEmail})
+  return await User.updateOne({ _id: id }, { verify, verifyTokenEmail })
 }
 const findUserByVerifyToken = async (verifyTokenEmail) => {
   return await User.findOne({ verifyTokenEmail })
