@@ -13,6 +13,6 @@ router.get('/current', guard, current)
 router.patch('/avatar', guard, upload.single('avatarURL'), uploadAvatar)
 
 router.get('/verify/:token', verifyUser)
-router.post('/verify',repitForVerifyUser)
+router.post('/verify', repitForVerifyUser)
 
 module.exports = router
